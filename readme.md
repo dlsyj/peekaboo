@@ -25,7 +25,7 @@ of how accurate the training sets have made the program.
 Milestones
 ----------
 
-* 4/23 - Script set to pull video and analyze frames
+* ~~4/23 - Script set to pull video and analyze frames~~
 * 4/30 - Face detection working, drawing a box around the head
 * 5/7  - Eyes and mouth detection with boxes
 * 5/14 - Ears and nose detection with boxes
