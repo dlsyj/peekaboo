@@ -1,20 +1,30 @@
 """
-The starts of a face detection and augmentation script using OpenCV
+Face detection and augmentation script using OpenCV
 """
 
 import cv
 
 
 # initialize opencv workings (application window, camera feed)
-name = "tests"
-source = cv.CaptureFromCAM(0)
-cv.NamedWindow(name)
+name    = "tests"
+source  = cv.CaptureFromCAM(0)
 storage = cv.CreateMemStorage()
+cv.NamedWindow(name)
 
 # load all the necessary training sets
-facecade = cv.Load("data/haarcascade_frontalface_alt.xml")
-eyecade = cv.Load("data/haarcascade_eye.xml")
+facecade  = cv.Load("data/haarcascade_frontalface_alt.xml")
+eyecade   = cv.Load("data/haarcascade_eye.xml")
 mouthcade = cv.Load("data/haarcascade_mcs_mouth.xml")
+learcade  = cv.Load("data/haarcascade_mcs_leftear.xml")
+rearcade  = cv.Load("data/haarcascade_mcs_rightear.xml")
+nosecade  = cv.Load("data/haarcascade_mcs_nose.xml")
+
+# colors for cv.Rectangle
+red    = cv.Scalar(0, 0, 255)
+blue   = cv.Scalar(255, 0, 0)
+green  = cv.Scalar(0, 128, 0)
+yellow = cv.Scalar(255, 255, 0)
+purple = cv.Scalar(128, 0, 128)
 
 
 def detect_feature(frame, cade, color=255, min_size=(60, 60)):
@@ -37,15 +47,12 @@ def detect_feature(frame, cade, color=255, min_size=(60, 60)):
 
 def detect_features(frame):
     """detect features based on loaded cascades and render the frame"""
-    # red, bigger
-    detect_feature(frame, facecade,
-                   color=cv.Scalar(0, 0, 255), min_size=(60, 60))
-    # blue, much smaller
-    detect_feature(frame, eyecade,
-                   color=cv.Scalar(255, 0, 0), min_size=(30, 30))
-    # green, still sort of small
-    detect_feature(frame, mouthcade,
-                   color=cv.Scalar(0, 128, 0), min_size=(30, 30))
+    detect_feature(frame, facecade,  color=red,    min_size=(60, 60))
+    detect_feature(frame, eyecade,   color=blue,   min_size=(30, 30))
+    detect_feature(frame, mouthcade, color=green,  min_size=(30, 30))
+    detect_feature(frame, rearcade, color=yellow, min_size=(30, 30))
+    detect_feature(frame, learcade, color=yellow, min_size=(30, 30))
+    detect_feature(frame, nosecade, color=purple, min_size=(30, 30))
 
     # return the processed frame to display
     cv.ShowImage(name, frame)
