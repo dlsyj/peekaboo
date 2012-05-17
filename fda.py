@@ -47,12 +47,12 @@ def detect_feature(frame, cade, color=255, min_size=(60, 60)):
 
 def detect_features(frame):
     """detect features based on loaded cascades and render the frame"""
-    detect_feature(frame, facecade,  color=red,    min_size=(60, 60))
-    detect_feature(frame, eyecade,   color=blue,   min_size=(30, 30))
-    detect_feature(frame, mouthcade, color=green,  min_size=(30, 30))
-    detect_feature(frame, rearcade, color=yellow, min_size=(30, 30))
-    detect_feature(frame, learcade, color=yellow, min_size=(30, 30))
-    detect_feature(frame, nosecade, color=purple, min_size=(30, 30))
+    # which features have what color rectangles
+    cades_colors = [(facecade, red), (eyecade,  blue), (mouthcade, green),
+                    (rearcade, yellow), (learcade, yellow), (nosecade, purple)]
+
+    for cade, color in cades_colors:
+        detect_feature(frame, cade, color=color, min_size=(50, 50))
 
     # return the processed frame to display
     cv.ShowImage(name, frame)
