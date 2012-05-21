@@ -26,8 +26,11 @@ green  = cv.Scalar(0, 128, 0)
 yellow = cv.Scalar(255, 255, 0)
 purple = cv.Scalar(128, 0, 128)
 
+# bools for which features to detect, set via number keys
+face, eyes, mouth, ears, nose = False, False, False, False, False
 
-def detect_feature(frame, cade, color=255, min_size=(60, 60)):
+
+def detect_feature(frame, cade, color, min_size=(30, 30)):
     """detect a single feature and draw a box around the matching area
 
     By using Canny Pruning, we disregard certain image regions to boost the
@@ -48,11 +51,17 @@ def detect_feature(frame, cade, color=255, min_size=(60, 60)):
 def detect_features(frame):
     """detect features based on loaded cascades and render the frame"""
     # which features have what color rectangles
-    cades_colors = [(facecade, red), (eyecade,  blue), (mouthcade, green),
-                    (rearcade, yellow), (learcade, yellow), (nosecade, purple)]
-
-    for cade, color in cades_colors:
-        detect_feature(frame, cade, color=color, min_size=(50, 50))
+    if face:
+        detect_feature(frame, facecade, color=red, min_size=(60, 60))
+    if eyes:
+        detect_feature(frame, eyecade, color=blue)
+    if mouth:
+        detect_feature(frame, mouthcade, color=green)
+    if ears:
+        detect_feature(frame, rearcade, color=yellow)
+        detect_feature(frame, learcade, color=yellow)
+    if nose:
+        detect_feature(frame, nosecade, color=purple)
 
     # return the processed frame to display
     cv.ShowImage(name, frame)
@@ -64,10 +73,25 @@ def loop():
     This loops until escape key is pressed, calling detect_features on each
     frame to look for faces.
     """
+    global face, eyes, mouth, ears, nose
+
     while True:
         # escape key to quit
         if cv.WaitKey(15) == 27:
             break
+
+        # grab key presses to set which features to detect (keys 1-5)
+        if cv.WaitKey(15) == 49:
+            face = False if face else True
+        if cv.WaitKey(15) == 50:
+            eyes = False if eyes else True
+        if cv.WaitKey(15) == 51:
+            mouth = False if mouth else True
+        if cv.WaitKey(15) == 52:
+            ears = False if ears else True
+        if cv.WaitKey(15) == 53:
+            nose = False if nose else True
+
         # grab frame from camera and process
         frame = cv.QueryFrame(source)
         detect_features(frame)
