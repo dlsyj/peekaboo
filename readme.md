@@ -24,7 +24,7 @@ Milestones
 * ~~5/7  - Eyes and mouth detection with boxes~~
 * **5/9  - Midterm presentation**
 * ~~5/14 - Ears and nose detection with boxes~~
-* 5/21 - Switch boxes with image overlays
+* ~~5/21 - Switch boxes with image overlays~~
 * 5/28 - Add keyboard shortcuts for different images
 * **6/4  - Project presentation**
 

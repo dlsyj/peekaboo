@@ -26,6 +26,9 @@ green  = cv.Scalar(0, 128, 0)
 yellow = cv.Scalar(255, 255, 0)
 purple = cv.Scalar(128, 0, 128)
 
+# first image overlay
+face_image = cv.LoadImage("data/poker_face.png")
+
 # bools for which features to detect, set via number keys
 face, eyes, mouth, ears, nose = False, False, False, False, False
 
@@ -37,6 +40,7 @@ def detect_feature(frame, cade, color, min_size=(30, 30)):
     performance. Tweaking the parameters passed to HaarDetectObjects greatly
     affects performance as well.
     """
+    global face_image
     # detect feature in image
     objs = cv.HaarDetectObjects(frame, cade, storage,
                                 scale_factor=1.2,
@@ -45,7 +49,15 @@ def detect_feature(frame, cade, color, min_size=(30, 30)):
                                 min_size=min_size)
     # draw rectangle around matched feature
     for (x, y, w, h), n in objs:
-        cv.Rectangle(frame, (x, y), (x + w, y + h), color)
+        new_feature = cv.CreateImage((w, h), 8, 3)
+        cv.Resize(face_image, new_feature, interpolation=cv.CV_INTER_AREA)
+
+        # overlay the face_image on the frame
+        for px in xrange(w):
+            for py in xrange(h):
+                over = cv.Get2D(new_feature, py, px)
+                over_ready = tuple(map(lambda x: x + 1, over))
+                cv.Set2D(frame, py + y, px + x, over_ready)
 
 
 def detect_features(frame):
