@@ -33,6 +33,26 @@ face_image = cv.LoadImage("data/poker_face.png")
 face, eyes, mouth, ears, nose = False, False, False, False, False
 
 
+def overlay_image(frame, x, y, w, h):
+    """resize and overlay an image where a feature is detected
+
+    This resizes the corresponding image to a matched feature, then loops
+    through all of its pixels to superimpose the image on the frame
+    """
+    global face_image
+
+    new_feature = cv.CreateImage((w, h), 8, 3)
+    cv.Resize(face_image, new_feature, interpolation=cv.CV_INTER_AREA)
+
+    # overlay the face_image on the frame
+    for px in xrange(w):
+        for py in xrange(h):
+            over = cv.Get2D(new_feature, py, px)
+            # this map takes care of the transparency of the image
+            over_ready = tuple(map(lambda x: x + 1, over))
+            cv.Set2D(frame, py + y, px + x, over_ready)
+
+
 def detect_feature(frame, cade, color, min_size=(30, 30)):
     """detect a single feature and draw a box around the matching area
 
@@ -40,7 +60,6 @@ def detect_feature(frame, cade, color, min_size=(30, 30)):
     performance. Tweaking the parameters passed to HaarDetectObjects greatly
     affects performance as well.
     """
-    global face_image
     # detect feature in image
     objs = cv.HaarDetectObjects(frame, cade, storage,
                                 scale_factor=1.2,
@@ -49,15 +68,7 @@ def detect_feature(frame, cade, color, min_size=(30, 30)):
                                 min_size=min_size)
     # draw rectangle around matched feature
     for (x, y, w, h), n in objs:
-        new_feature = cv.CreateImage((w, h), 8, 3)
-        cv.Resize(face_image, new_feature, interpolation=cv.CV_INTER_AREA)
-
-        # overlay the face_image on the frame
-        for px in xrange(w):
-            for py in xrange(h):
-                over = cv.Get2D(new_feature, py, px)
-                over_ready = tuple(map(lambda x: x + 1, over))
-                cv.Set2D(frame, py + y, px + x, over_ready)
+        overlay_image(frame, x, y, w, h)
 
 
 def detect_features(frame):
