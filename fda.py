@@ -15,15 +15,13 @@ cv.NamedWindow(name)
 facecade  = cv.Load("data/haarcascade_frontalface_alt.xml")
 eyecade   = cv.Load("data/haarcascade_eye.xml")
 mouthcade = cv.Load("data/haarcascade_mcs_mouth.xml")
-learcade  = cv.Load("data/haarcascade_mcs_leftear.xml")
-rearcade  = cv.Load("data/haarcascade_mcs_rightear.xml")
 nosecade  = cv.Load("data/haarcascade_mcs_nose.xml")
 
 # first image overlay
 face_image = cv.LoadImage("data/poker_face.png")
 
 # bools for which features to detect, set via number keys
-face, eyes, mouth, ears, nose = False, False, False, False, False
+face, eyes, mouth, nose = False, False, False, False
 
 
 def overlay_image(frame, x, y, w, h):
@@ -80,9 +78,6 @@ def detect_features(frame):
         detect_feature(frame, eyecade, color=blue)
     if mouth:
         detect_feature(frame, mouthcade, color=green)
-    if ears:
-        detect_feature(frame, rearcade, color=yellow)
-        detect_feature(frame, learcade, color=yellow)
     if nose:
         detect_feature(frame, nosecade, color=purple)
 
@@ -96,7 +91,7 @@ def loop():
     This loops until escape key is pressed, calling detect_features on each
     frame to look for faces.
     """
-    global face, eyes, mouth, ears, nose
+    global face, eyes, mouth, nose
 
     while True:
         # grab the key press to delegate action
@@ -106,7 +101,7 @@ def loop():
         if key == 27:
             break
 
-        # keys 1-5 determine detected features
+        # keys 1-4 determine detected features
         if key == 49:
             face = False if face else True
         if key == 50:
@@ -114,8 +109,6 @@ def loop():
         if key == 51:
             mouth = False if mouth else True
         if key == 52:
-            ears = False if ears else True
-        if key == 53:
             nose = False if nose else True
 
         # grab frame from camera and process
