@@ -19,13 +19,6 @@ learcade  = cv.Load("data/haarcascade_mcs_leftear.xml")
 rearcade  = cv.Load("data/haarcascade_mcs_rightear.xml")
 nosecade  = cv.Load("data/haarcascade_mcs_nose.xml")
 
-# colors for cv.Rectangle
-red    = cv.Scalar(0, 0, 255)
-blue   = cv.Scalar(255, 0, 0)
-green  = cv.Scalar(0, 128, 0)
-yellow = cv.Scalar(255, 255, 0)
-purple = cv.Scalar(128, 0, 128)
-
 # first image overlay
 face_image = cv.LoadImage("data/poker_face.png")
 
@@ -73,6 +66,13 @@ def detect_feature(frame, cade, color, min_size=(30, 30)):
 
 def detect_features(frame):
     """detect features based on loaded cascades and render the frame"""
+    # colors for cv.Rectangle
+    red    = cv.Scalar(0, 0, 255)
+    blue   = cv.Scalar(255, 0, 0)
+    green  = cv.Scalar(0, 128, 0)
+    yellow = cv.Scalar(255, 255, 0)
+    purple = cv.Scalar(128, 0, 128)
+
     # which features have what color rectangles
     if face:
         detect_feature(frame, facecade, color=red, min_size=(60, 60))
@@ -99,20 +99,23 @@ def loop():
     global face, eyes, mouth, ears, nose
 
     while True:
-        # escape key to quit
-        if cv.WaitKey(15) == 27:
+        # grab the key press to delegate action
+        key = cv.WaitKey(15)
+
+        # escape key
+        if key == 27:
             break
 
-        # grab key presses to set which features to detect (keys 1-5)
-        if cv.WaitKey(15) == 49:
+        # keys 1-5 determine detected features
+        if key == 49:
             face = False if face else True
-        if cv.WaitKey(15) == 50:
+        if key == 50:
             eyes = False if eyes else True
-        if cv.WaitKey(15) == 51:
+        if key == 51:
             mouth = False if mouth else True
-        if cv.WaitKey(15) == 52:
+        if key == 52:
             ears = False if ears else True
-        if cv.WaitKey(15) == 53:
+        if key == 53:
             nose = False if nose else True
 
         # grab frame from camera and process
