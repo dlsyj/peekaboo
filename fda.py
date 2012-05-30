@@ -5,33 +5,27 @@ Face detection and augmentation script using OpenCV
 import cv
 
 
-# initialize opencv workings (application window, camera feed)
-name    = "tests"
-source  = cv.CaptureFromCAM(0)
-storage = cv.CreateMemStorage()
-cv.NamedWindow(name)
-
 # load all the necessary training sets
-facecade  = cv.Load("data/haarcascade_frontalface_alt.xml")
-eyecade   = cv.Load("data/haarcascade_eye.xml")
-mouthcade = cv.Load("data/haarcascade_mcs_mouth.xml")
-nosecade  = cv.Load("data/haarcascade_mcs_nose.xml")
+face_cade  = cv.Load("data/haarcascade_frontalface_alt.xml")
+eyes_cade   = cv.Load("data/haarcascade_eye.xml")
+mouth_cade = cv.Load("data/haarcascade_mcs_mouth.xml")
+nose_cade  = cv.Load("data/haarcascade_mcs_nose.xml")
 
 # first image overlay
-image = cv.LoadImage("data/eye.png")
+moustache = cv.LoadImage("data/moustache.png")
+eye = cv.LoadImage("data/eye.png")
+tophat = cv.LoadImage("data/tophat.png")
 
 # bools for which features to detect, set via number keys
 face, eyes, mouth, nose = False, False, False, False
 
 
-def overlay_image(frame, x, y, w, h):
+def overlay_image(frame, image, x, y, w, h):
     """resize and overlay an image where a feature is detected
 
     This resizes the corresponding image to a matched feature, then loops
     through all of its pixels to superimpose the image on the frame
     """
-    global image
-
     new_feature = cv.CreateImage((w, h), 8, 3)
     cv.Resize(image, new_feature, interpolation=cv.CV_INTER_AREA)
 
@@ -44,7 +38,7 @@ def overlay_image(frame, x, y, w, h):
             cv.Set2D(frame, py + y, px + x, over_ready)
 
 
-def detect_feature(frame, cade, color, min_size=(30, 30)):
+def detect_feature(frame, cade, min_size=(30, 30)):
     """detect a single feature and draw a box around the matching area
 
     By using Canny Pruning, we disregard certain image regions to boost the
@@ -52,37 +46,31 @@ def detect_feature(frame, cade, color, min_size=(30, 30)):
     affects performance as well.
     """
     # detect feature in image
-    objs = cv.HaarDetectObjects(frame, cade, storage,
-                                scale_factor=1.2,
-                                min_neighbors=3,
+    objs = cv.HaarDetectObjects(frame, cade, cv.CreateMemStorage(),
+                                scale_factor=1.2, min_neighbors=3,
                                 flags=cv.CV_HAAR_DO_CANNY_PRUNING,
                                 min_size=min_size)
-    # draw rectangle around matched feature
+
+    # pass the proper image to overlay for each match
     for (x, y, w, h), n in objs:
-        overlay_image(frame, x, y, w, h)
+        if cade == face_cade:
+            overlay_image(frame, tophat, x, y, w, h)
+        elif cade == eyes_cade:
+            overlay_image(frame, eye, x, y, w, h)
+        elif cade == nose_cade:
+            overlay_image(frame, moustache, x, y, w, h)
 
 
 def detect_features(frame):
     """detect features based on loaded cascades and render the frame"""
-    # colors for cv.Rectangle
-    red    = cv.Scalar(0, 0, 255)
-    blue   = cv.Scalar(255, 0, 0)
-    green  = cv.Scalar(0, 128, 0)
-    yellow = cv.Scalar(255, 255, 0)
-    purple = cv.Scalar(128, 0, 128)
-
-    # which features have what color rectangles
     if face:
-        detect_feature(frame, facecade, color=red, min_size=(60, 60))
+        detect_feature(frame, face_cade, min_size=(60, 60))
     if eyes:
-        detect_feature(frame, eyecade, color=blue)
+        detect_feature(frame, eyes_cade)
     if mouth:
-        detect_feature(frame, mouthcade, color=green)
+        detect_feature(frame, mouth_cade)
     if nose:
-        detect_feature(frame, nosecade, color=purple)
-
-    # return the processed frame to display
-    cv.ShowImage(name, frame)
+        detect_feature(frame, nose_cade)
 
 
 def loop():
@@ -93,11 +81,15 @@ def loop():
     """
     global face, eyes, mouth, nose
 
+    win_name = "peekaboo"
+    source = cv.CaptureFromCAM(0)
+    cv.NamedWindow(win_name)
+
     while True:
         # grab the key press to delegate action
         key = cv.WaitKey(15)
 
-        # escape key
+        # escape key to exit
         if key == 27:
             break
 
@@ -111,11 +103,11 @@ def loop():
         if key == 52:
             nose = False if nose else True
 
-        # grab frame from camera and process
+        # get the frame, detect features, and show frame
         frame = cv.QueryFrame(source)
         detect_features(frame)
+        cv.ShowImage(win_name, frame)
 
-    # close GUI Window
     cv.DestroyAllWindows()
 
 
