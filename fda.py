@@ -18,7 +18,7 @@ mouthcade = cv.Load("data/haarcascade_mcs_mouth.xml")
 nosecade  = cv.Load("data/haarcascade_mcs_nose.xml")
 
 # first image overlay
-face_image = cv.LoadImage("data/poker_face.png")
+image = cv.LoadImage("data/eye.png")
 
 # bools for which features to detect, set via number keys
 face, eyes, mouth, nose = False, False, False, False
@@ -30,12 +30,12 @@ def overlay_image(frame, x, y, w, h):
     This resizes the corresponding image to a matched feature, then loops
     through all of its pixels to superimpose the image on the frame
     """
-    global face_image
+    global image
 
     new_feature = cv.CreateImage((w, h), 8, 3)
-    cv.Resize(face_image, new_feature, interpolation=cv.CV_INTER_AREA)
+    cv.Resize(image, new_feature, interpolation=cv.CV_INTER_AREA)
 
-    # overlay the face_image on the frame
+    # overlay the image on the frame
     for px in xrange(w):
         for py in xrange(h):
             over = cv.Get2D(new_feature, py, px)
