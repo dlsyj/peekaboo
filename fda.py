@@ -8,7 +8,6 @@ import cv
 # load all the necessary training sets
 face_cade  = cv.Load("data/haarcascade_frontalface_alt.xml")
 eyes_cade   = cv.Load("data/haarcascade_eye.xml")
-mouth_cade = cv.Load("data/haarcascade_mcs_mouth.xml")
 nose_cade  = cv.Load("data/haarcascade_mcs_nose.xml")
 
 # first image overlay
@@ -17,7 +16,7 @@ eye = cv.LoadImage("data/eye.png")
 tophat = cv.LoadImage("data/tophat.png")
 
 # bools for which features to detect, set via number keys
-face, eyes, mouth, nose = False, False, False, False
+face, eyes, nose = False, False, False
 
 
 def overlay_image(frame, image, x, y, w, h):
@@ -67,8 +66,6 @@ def detect_features(frame):
         detect_feature(frame, face_cade, min_size=(60, 60))
     if eyes:
         detect_feature(frame, eyes_cade)
-    if mouth:
-        detect_feature(frame, mouth_cade)
     if nose:
         detect_feature(frame, nose_cade)
 
@@ -79,7 +76,7 @@ def loop():
     This loops until escape key is pressed, calling detect_features on each
     frame to look for faces.
     """
-    global face, eyes, mouth, nose
+    global face, eyes, nose
 
     win_name = "peekaboo"
     source = cv.CaptureFromCAM(0)
@@ -93,14 +90,12 @@ def loop():
         if key == 27:
             break
 
-        # keys 1-4 determine detected features
+        # keys 1-3 determine detected features
         if key == 49:
             face = False if face else True
         if key == 50:
             eyes = False if eyes else True
         if key == 51:
-            mouth = False if mouth else True
-        if key == 52:
             nose = False if nose else True
 
         # get the frame, detect features, and show frame
