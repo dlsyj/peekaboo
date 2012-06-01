@@ -32,9 +32,9 @@ def overlay_image(frame, image, x, y, w, h):
     for px in xrange(w):
         for py in xrange(h):
             over = cv.Get2D(new_feature, py, px)
-            # this map takes care of the transparency of the image
-            over_ready = tuple(map(lambda x: x + 1, over))
-            cv.Set2D(frame, py + y, px + x, over_ready)
+            # don't map the whitespace surrounding the image
+            if over != (255.0, 255.0, 255.0, 0.0):
+                cv.Set2D(frame, py + y, px + x, over)
 
 
 def detect_feature(frame, cade, min_size=(30, 30)):
