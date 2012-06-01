@@ -29,12 +29,18 @@ def overlay_image(frame, image, x, y, w, h):
     cv.Resize(image, new_feature, interpolation=cv.CV_INTER_AREA)
 
     # overlay the image on the frame
-    for px in xrange(w):
-        for py in xrange(h):
+    for py in xrange(h):
+        for px in xrange(w):
             over = cv.Get2D(new_feature, py, px)
+
             # don't map the whitespace surrounding the image
             if over != (255.0, 255.0, 255.0, 0.0):
-                cv.Set2D(frame, py + y, px + x, over)
+                new_y = h + py + y
+                new_x = px + x
+
+                # make sure the image is in the frame
+                if 0 < new_x < frame.width and 0 < new_y < frame.height:
+                    cv.Set2D(frame, new_y, new_x, over)
 
 
 def detect_feature(frame, cade, min_size=(30, 30)):
