@@ -7,19 +7,19 @@ import cv
 
 # load all the necessary training sets
 face_cade  = cv.Load("data/haarcascade_frontalface_alt.xml")
-eyes_cade   = cv.Load("data/haarcascade_eye.xml")
+eye_cade   = cv.Load("data/haarcascade_eye.xml")
 nose_cade  = cv.Load("data/haarcascade_mcs_nose.xml")
 
 # first image overlay
 moustache = cv.LoadImage("data/moustache.png")
-eye = cv.LoadImage("data/eye.png")
-tophat = cv.LoadImage("data/tophat.png")
+eyeball   = cv.LoadImage("data/eye.png")
+tophat    = cv.LoadImage("data/tophat.png")
 
 # drawn bottom up rather than top down
 cv.Flip(tophat, tophat, flipMode=0)
 
 # bools for which features to detect, set via number keys
-face, eyes, nose = False, False, False
+face, eye, nose = False, False, False
 
 
 def overlay_image(frame, image, x, y, w, h):
@@ -69,8 +69,8 @@ def detect_feature(frame, cade, min_size=(30, 30)):
     for (x, y, w, h), n in objs:
         if cade == face_cade:
             overlay_image(frame, tophat, x, y, w, h)
-        elif cade == eyes_cade:
-            overlay_image(frame, eye, x, y, w, h)
+        elif cade == eye_cade:
+            overlay_image(frame, eyeball, x, y, w, h)
         elif cade == nose_cade:
             overlay_image(frame, moustache, x, y, w, h)
 
@@ -79,8 +79,8 @@ def detect_features(frame):
     """detect features based on loaded cascades and render the frame"""
     if face:
         detect_feature(frame, face_cade, min_size=(60, 60))
-    if eyes:
-        detect_feature(frame, eyes_cade)
+    if eye:
+        detect_feature(frame, eye_cade)
     if nose:
         detect_feature(frame, nose_cade)
 
@@ -91,7 +91,7 @@ def loop():
     This loops until escape key is pressed, calling detect_features on each
     frame to look for faces.
     """
-    global face, eyes, nose
+    global face, eye, nose
 
     win_name = "peekaboo"
     source = cv.CaptureFromCAM(0)
@@ -109,7 +109,7 @@ def loop():
         if key == 49:
             face = False if face else True
         if key == 50:
-            eyes = False if eyes else True
+            eye = False if eye else True
         if key == 51:
             nose = False if nose else True
 

@@ -10,11 +10,11 @@ images and shapes over the features to create some augmentation. For example,
 once I am able to detect eyes, I could map images of cartoon eyes or circular
 shapes the detected areas.
 
-The end product should map detect a person's eyes, nose, ears, mouth, and face,
-with the eyes and ears being detected as separate right and left areas instead
-of a pair of areas. This should allow for versatility in overlaying the images,
-and with the initial milestones involving drawing boxes, I'll get a good sense
-of how accurate the training sets have made the program.
+The end product should map detect a person's eyes, nose, and face, with the
+eyes being detected as separate right and left areas instead of a pair of
+areas. This should allow for versatility in overlaying the images, and with
+the initial milestones involving drawing boxes, I'll get a good sense of how
+accurate the training sets have made the program.
 
 Milestones
 ----------
