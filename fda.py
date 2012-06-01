@@ -15,6 +15,9 @@ moustache = cv.LoadImage("data/moustache.png")
 eye = cv.LoadImage("data/eye.png")
 tophat = cv.LoadImage("data/tophat.png")
 
+# drawn bottom up rather than top down
+cv.Flip(tophat, tophat, flipMode=0)
+
 # bools for which features to detect, set via number keys
 face, eyes, nose = False, False, False
 
@@ -35,8 +38,14 @@ def overlay_image(frame, image, x, y, w, h):
 
             # don't map the whitespace surrounding the image
             if over != (255.0, 255.0, 255.0, 0.0):
-                new_y = h + py + y
-                new_x = px + x
+                # set the proper offsets on drawing the images
+                if image is tophat:
+                    new_y = y - py
+                elif image is moustache:
+                    new_y = h + y + py
+                else:
+                    new_y = y + py
+                new_x = x + px
 
                 # make sure the image is in the frame
                 if 0 < new_x < frame.width and 0 < new_y < frame.height:
