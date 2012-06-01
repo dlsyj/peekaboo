@@ -42,7 +42,7 @@ def overlay_image(frame, image, x, y, w, h):
                 if image is tophat:
                     new_y = y - py
                 elif image is moustache:
-                    new_y = h + y + py
+                    new_y = (h / 2) + y + py
                 else:
                     new_y = y + py
                 new_x = x + px
