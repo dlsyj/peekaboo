@@ -28,3 +28,7 @@ Milestones
 * ~~5/28 - Add keyboard shortcuts for different features~~
 * **6/4  - Project presentation**
 
+Sample Image
+------------
+
+![peekaboo](https://github.com/dzhurley/peekaboo/raw/master/data/sample.jpg)
